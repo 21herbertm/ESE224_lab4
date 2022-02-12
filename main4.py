@@ -1,16 +1,5 @@
 # ESE 224 --- Signal and Information Processing
 #
-# Spring 2021
-#
-# Lab 4: Fourier Transforms
-#
-# Main function
-#
-# By Zhiyang Wang (adapted from 2020 edition of the course)
-
-###############################################################################
-############################# I M P O R T I N G ###############################
-###############################################################################
 # Standard libraries
 import numpy as np
 import matplotlib.pyplot as plt
@@ -154,6 +143,15 @@ def bandlimit(x, fs, fmax):
     
     return x_bandlim.real, Treal,  X_c, f_c, X_band
 
+"""
+2.1 Voice as a bandlimited signal. Record 3 seconds of the voice of one of group as members
+at a sampling rate of 40kHz. Feel free to use the 2.1 your Voice a bandlimited signal
+provided python class recordsound() to do this. Take the DFT of your
+voice and observe that coefficients with frequencies f > 4kHz are close
+to null. Set these coefficients to zero to create a bandlimited signal. Play
+your voice back and observe that the removed frequencies don’t affect the
+quality of your voice.
+"""
         
 def q_21(x, x_bl, Treal, X_c, f_c, X_band):
     """
@@ -267,11 +265,11 @@ def q_25(z, g, fs, fmax):
     N= len(z)
     
     DFT = dft.dft(z, fs)
-    [freqs, X, f_Zc, Z_c] = DFT.solve3()
+    [freqs, X, f_Zc, Z_c] = DFT.solve_using_numpy_fft()
     
     y_demod_inter = cos_modu(z, g, fs)
     DFT = dft.dft(y_demod_inter, fs)
-    [freqs, Y, f_c, Y_demod_inter] = DFT.solve3()
+    [freqs, Y, f_c, Y_demod_inter] = DFT.solve_using_numpy_fft()
     
     index_min = np.min( np.where(f_c >= -fmax)[0])
     index_max = np.max( np.where(f_c <= fmax)[0])
@@ -333,7 +331,13 @@ def q_25(z, g, fs, fmax):
 
 
 if __name__ == '__main__':
-    
+
+
+    """
+    2.1 Voice as a bandlimited signal. Record 3 seconds of the voice of one
+    of your group members at a sampling rate of 40kHz. Feel free to use the
+    provided python class recordsound() to do this"""
+
     # sigmalist = [1, 2, 4]
     # duration_of_signal = 50
     # sampling_frequency = 10
@@ -352,12 +356,14 @@ if __name__ == '__main__':
     x2 = myvoice.solve().reshape(T * fs)
     # fs, x = read("myvoice.wav")
 
-    # N = len(x)
-    # print(N)
-    # x_band, Treal, X_c, f_c, X_band = bandlimit(x, fs, fmax)
-    # q_21(x, x_band, Treal, X_c, f_c, X_band)
+
+
+    N = len(x1)
+    print(N)
+    x_band, Treal, X_c, f_c, X_band = bandlimit(x1, fs, fmax)
+    q_21(x1, x_band, Treal, X_c, f_c, X_band)
     
-    # # x_mod = cos_modu(x_band, g1, fs)
+    # x_mod = cos_modu(x_band, g1, fs)
     # x_mod = q_22(x_band, g1, fs)
     # q_23(x_band, x_mod, fs, Treal)
     
