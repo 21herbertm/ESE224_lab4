@@ -144,7 +144,7 @@ def bandlimit(x, fs, fmax):
     return x_bandlim.real, Treal,  X_c, f_c, X_band
 
 """
-2.1 Voice as a bandlimited signal. Record 3 seconds of the voice of one of group as members
+QUESTION 2.1 Voice as a bandlimited signal. Record 3 seconds of the voice of one of group as members
 at a sampling rate of 40kHz. Feel free to use the 2.1 your Voice a bandlimited signal
 provided python class recordsound() to do this. Take the DFT of your
 voice and observe that coefficients with frequencies f > 4kHz are close
@@ -190,7 +190,9 @@ def q_21(x, x_bl, Treal, X_c, f_c, X_band):
     write('bandlimited_myvoice.wav', fs, x_bl.astype(np.float32))
 
     
-
+'''
+QUESTION 2.2 Voice modulation. Take the bandlimited signal you created in Part 2.1
+and modulate it with center frequency g1 = 5kHz.'''
 def q_22(x, g, fs):
     """
     Question 2.2_exponential modulation
@@ -215,7 +217,19 @@ def cos_modu(x, g, fs):
     
     return x_mod
     
-    
+'''
+QUESTION 2.3 Modulation with a cosine. The problem with modulating with a
+complex exponential as we did in Part 2.2 is that complex exponentials
+are signals with imaginary parts that, therefore, can’t be generated in a
+real system. In a real system we have to modulate using a cosine or a
+sine. Redefine then the modulated signal as
+xg(t) = cos(2πgt)x(t), (12)
+and let Xg = F(xg) be the respective Fourier transform. Write down an
+expression for Xg in terms of X (it might be useful to recall how to write
+the cos(x) function as a combination of complex exponentials). Take the
+bandlimited signal you created in Part 2.1 and modulate it with a cosine
+with frequency g1 = 5kHz. Verify that expression you derived is correct.
+'''
 def q_23(x_band, x_mod, fs, Treal):
     """
     Question 2.3_cosine modulation, plot the signals in time and frequency domain
@@ -255,7 +269,12 @@ def q_23(x_band, x_mod, fs, Treal):
     axs[1].set_xlabel('Frequency')
     axs[1].set_ylabel('DFT')
     plt.show() 
-    
+
+'''
+QUESTION 2.5 Recover individual voices. Explain how to recover your voice and
+the voice of your partner from the mixed signal z. Implement the recovery
+and play back the individual voice pieces.
+'''
     
 def q_25(z, g, fs, fmax):
     """
@@ -348,7 +367,9 @@ if __name__ == '__main__':
     fmax = 4000
     g1 = 5000
     g2 = 13000
-    
+
+
+
     myvoice = recordsound(T, fs)      
     x1 = myvoice.solve().reshape(T * fs)
     
@@ -363,9 +384,9 @@ if __name__ == '__main__':
     x_band, Treal, X_c, f_c, X_band = bandlimit(x1, fs, fmax)
     q_21(x1, x_band, Treal, X_c, f_c, X_band)
     
-    # x_mod = cos_modu(x_band, g1, fs)
-    # x_mod = q_22(x_band, g1, fs)
-    # q_23(x_band, x_mod, fs, Treal)
+    x_mod = cos_modu(x_band, g1, fs)
+    x_mod = q_22(x_band, g1, fs)
+    q_23(x_band, x_mod, fs, Treal)
     
     
     # fs, x1 = read("myvoice1.wav")
