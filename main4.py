@@ -140,7 +140,7 @@ def bandlimit(x, fs, fmax):
     N = len(x)
     # calculate the dft 
     DFT = dft.dft(x, fs)
-    [freqs, X, f_c, X_c] = DFT.solve3()
+    [freqs, X, f_c, X_c] = DFT.solve_using_numpy_fft()
     # calculate the minimum and maximum index for the frequencies under the frequency threshold
     index_min = np.min( np.where(f_c >= -fmax)[0])
     index_max = np.max( np.where(f_c <= fmax)[0])
@@ -225,10 +225,10 @@ def q_23(x_band, x_mod, fs, Treal):
     """       
     
     DFT = dft.dft(x_band, fs)
-    [freqs, X, f_c, X_c] = DFT.solve3()
+    [freqs, X, f_c, X_c] = DFT.solve_using_numpy_fft()
     
     DFT_mod = dft.dft(x_mod, fs)
-    [freqs, X, f_mod, X_mod] = DFT_mod.solve3()
+    [freqs, X, f_mod, X_mod] = DFT_mod.solve_using_numpy_fft()
     
     
     fig, axs = plt.subplots(2)
