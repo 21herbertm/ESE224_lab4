@@ -19,10 +19,7 @@ import sounddevice as sd
 
 
 
-# Local files
-import cexp
-import dft
-import idft
+
  
 
 class dft():
@@ -170,77 +167,3 @@ class dft():
         # \\\\\ CENTER FFT.
         X_c=np.roll(X,np.int(np.ceil(self.K/2-1))) # Circularly shift X to get it centered in f_c==0
         return [self.f,X,self.f_c,X_c]
-
-###############################################################################
-############################ Q U E S T I O N 1.1 ##############################
-###############################################################################
-class gaussian_pulse(object):
-    """
-    Generates a gaussian pulse signal
-    Arguments:
-        mu, sigma: mean and variance of the Gaussian pulse
-        T: duration of the signal (int)
-        fs: sampling frequncy (int)
-    """
-
-    def __init__(self, mu, sigma, T, fs):
-        self.N = np.int(np.floor( 2 * T * fs))
-
-        # Create the active part
-        # self.sig = signal.gaussian(self.N, std=sigma)
-        self.t = np.arange(-T, T, 1 / fs)
-        self.sig = np.exp(-(self.t-mu)**2 / (2 * sigma**2))
-
-        # Create the time array
-        self.t = np.arange(-T, T, 1 / fs)
-        
-def gau_ft(mu, sigma, f):
-    
-    gauss_ft = np.sqrt(2 * math.pi) * sigma * np.exp(- 2* (math.pi**2) *(f**2) *(sigma**2) + 1j * 2* math.pi * f * mu)
-        
-    return gauss_ft  
-
-def q_11(mu, sigma_list, T, fs):
-
-    for sigma in sigma_list:
-        # Generate Gaussian signals
-        gau_pulse = gaussian_pulse(mu, sigma, T, fs)
-        # Calculate the dft
-        gaupulse_dft = dft(gau_pulse.sig, fs)
-        [freqs, X, f_c, X_c] = gaupulse_dft.solve3()
-
-        # Calculate the ft
-
-        # gau_ft = gaussian_pulse(mu, 1 / (2 * math.pi * sigma), T, fs) 
-        # gau_ft_sig = gau_ft.sig
-        # gau_ft_sig = gau_ft.sig  * np.sqrt(2*math.pi) * sigma * fs/ np.sqrt( np.int(np.floor(T * fs)) ) 
-    
-        gau_ft_sig = gau_ft(mu, sigma, f_c) * fs/ np.sqrt( np.int(np.floor(2 * T * fs)) )
-
-        # Plot
-        fig, axs = plt.subplots(3)
-        axs[0].grid()
-        axs[1].grid()
-        axs[2].grid()
-        fig.suptitle('Gaussian Pulse of Sigma %3.2f ' % (sigma))
-        fig.subplots_adjust(left=None, bottom=None, right=None, top=None, wspace=None, hspace=0.6)
-        axs[0].plot(gau_pulse.t, gau_pulse.sig)
-        axs[0].set_xlabel('Time (s)')
-        axs[0].set_xlim((-10,10))
-
-        axs[0].set_ylabel('Signal')
-        axs[1].plot(f_c, abs(X_c))
-        axs[1].set_xlabel('Frequency (Hz)')
-        axs[1].set_ylabel('DFT')
-        axs[2].plot(f_c, abs(gau_ft_sig))
-        axs[2].set_xlabel('Frequency (Hz)')
-        # axs[2].set_xlim((-5,5))
-        axs[2].set_ylabel('Scaled FT')
-        plt.show()
-        
-if __name__ == '__main__':
-    
-    sigmalist = [1, 2, 4]
-    duration_of_signal = 50
-    sampling_frequency = 10
-    q_11(2, sigmalist, duration_of_signal, sampling_frequency)
